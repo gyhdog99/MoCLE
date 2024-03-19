@@ -6,4 +6,100 @@ This repository contains the implementation of the paper:
 > MoCLE: Mixture of Cluster-conditional LoRA Experts for Vision-language Instruction Tuning <br>
 > [Yunhao Gou](https://gyhdog.github.io/), [Zhili Liu](https://scholar.google.com/citations?user=FdR09jsAAAAJ&hl=zh-CN), [Kai Chen](https://kaichen1998.github.io/), [Lanqing Hong](https://scholar.google.com/citations?hl=zh-CN&user=2p7x6OUAAAAJ&view_op=list_works&sortby=pubdate), [Hang Xu](https://xuhangcn.github.io/), [Aoxue Li](https://dblp.org/pid/152/6095.html), [James T. Kwok](https://www.cse.ust.hk/~jamesk/), [Yu Zhang](https://yuzhanghk.github.io/), [Dit-Yan Yeung](https://sites.google.com/view/dyyeung/home) <br>
 
-![img](./images/overview.png)
+<!-- ![img](./images/overview.png) -->
+<img src="./images/overview.png" alt="drawing" width="800"/>
+
+## Installation
+
+
+1. Install [Lavis](https://github.com/salesforce/LAVIS), the codebase on which MoCLE is built. Follow the guidelines [here](https://github.com/salesforce/LAVIS?tab=readme-ov-file#installation).
+
+2. Clone the repository of MoCLE.
+
+   ```bash
+   git clone https://github.com/gyhdog99/mocle.git
+   ```
+
+3. Build the modified [PEFT](https://github.com/huggingface/peft) package.
+    ```Shell
+    conda activate lavis  # the env created for Lavis in step 1
+    cd mocle
+    cd peft-main
+    pip install -e .
+    ```
+
+4. Copy ```mocle.py``` and ```mocle.yaml``` in this repository to the following paths in Lavis:
+
+    ```
+    └── lavis
+        ├── models
+        │    └── mocle.py
+        └── configs   
+            └── mocle.yaml
+    ```
+
+5. Modify ```./lavis/models/__init__.py``` in Lavis as follows:
+
+
+    (a) add  ```from lavis.models.blip2_models.mocle import MoCLE``` in the begining of the file.
+    
+    (b) add ```"MoCLE"``` to ```__all__ = [...,...]```
+
+## Prepare Models
+1. MoCLE is based on vicuna-7b-v1.1. Download the corresponding model llm [here](https://huggingface.co/lmsys/vicuna-7b-v1.1).
+2. Set ```llm_model``` in ```.../lavis/configs/mocle.yaml``` to the downloaded LLM weight path.
+3. Download the model checkpoint of MoCLE
+
+    | # Clusters | Temperatures | Main Model | Clustering Model |
+    |--|----|-----|-----|
+    | 16 | 0.05 | [c16_t005]() | [c16]() |
+    | 64 | 0.05 | [c64_t005]() | [c64]() |
+    | 64 | 0.10 | [c64_t010]() | [c64]() |
+4. Set ```finetuned``` and ```kmeans_ckpt``` in ```.../lavis/configs/mocle.yaml``` to the weights of the downloaded main model and clustering model, respectively. 
+(Please adjust ```total_tasks``` and ```gates_tmp``` accordingly, which stand for # Clusters and Temperatures). 
+
+## Model Inference 
+
+1. Load an image locally
+
+    ```python
+    import torch
+    from PIL import Image
+    # setup device to use
+    device = torch.device("cuda") if torch.cuda.is_available() else "cpu"
+    # load sample image
+    raw_image = Image.open(".../path_to_images/").convert("RGB")
+    ```
+
+2. Load the models 
+
+    ```python
+    from lavis.models import load_model_and_preprocess
+    # loads MoCLE model
+    model, vis_processors, _ = load_model_and_preprocess(name="mocle", model_type="mocle", is_eval=True, device=device)
+    # prepare the image
+    image = vis_processors["eval"](raw_image).unsqueeze(0).to(device)
+    ```
+
+3. Generate
+
+    ```python
+    model.generate({"image": image, "prompt": "Your query about this image"})
+    ```
+
+## Acknowledgement
++ [Lavis](https://github.com/salesforce/LAVIS) This repository is built upon Lavis!
++ [PEFT](https://github.com/huggingface/peft) Our Mixture of LoRAs are based on PEFT.
+
+## Citation
+
+If you're using MoCLE in your research or applications, please cite using this BibTeX:
+
+```bibtex
+@article{gou2023mixture,
+  title={Mixture of cluster-conditional lora experts for vision-language instruction tuning},
+  author={Gou, Yunhao and Liu, Zhili and Chen, Kai and Hong, Lanqing and Xu, Hang and Li, Aoxue and Yeung, Dit-Yan and Kwok, James T and Zhang, Yu},
+  journal={arXiv preprint arXiv:2312.12379},
+  year={2023}
+}
+```
