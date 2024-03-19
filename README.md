@@ -12,7 +12,7 @@ This repository contains the implementation of the paper:
 ## Installation
 
 
-1. Install [Lavis](https://github.com/salesforce/LAVIS), the codebase on which MoCLE is built. Follow the guidelines [here](https://github.com/salesforce/LAVIS?tab=readme-ov-file#installation).
+1. Install [LAVIS](https://github.com/salesforce/LAVIS), the codebase on which MoCLE is built. Follow the guidelines [here](https://github.com/salesforce/LAVIS?tab=readme-ov-file#installation).
 
 2. Clone the repository of MoCLE.
 
@@ -22,13 +22,13 @@ This repository contains the implementation of the paper:
 
 3. Build the modified [PEFT](https://github.com/huggingface/peft) package.
     ```Shell
-    conda activate lavis  # the env created for Lavis in step 1
+    conda activate lavis  # the env created for LAVIS in step 1
     cd mocle
     cd peft-main
     pip install -e .
     ```
 
-4. Copy ```mocle.py``` and ```mocle.yaml``` in this repository to the following paths in Lavis:
+4. Copy ```mocle.py``` and ```mocle.yaml``` in this repository to the following paths in LAVIS:
 
     ```
     └── lavis
@@ -38,7 +38,7 @@ This repository contains the implementation of the paper:
             └── mocle.yaml
     ```
 
-5. Modify ```./lavis/models/__init__.py``` in Lavis as follows:
+5. Modify ```./lavis/models/__init__.py``` in LAVIS as follows:
 
 
     (a) add  ```from lavis.models.blip2_models.mocle import MoCLE``` in the begining of the file.
@@ -88,7 +88,7 @@ This repository contains the implementation of the paper:
     ```
 
 ## Acknowledgement
-+ [Lavis](https://github.com/salesforce/LAVIS) This repository is built upon Lavis!
++ [LAVIS](https://github.com/salesforce/LAVIS) This repository is built upon LAVIS!
 + [PEFT](https://github.com/huggingface/peft) Our Mixture of LoRAs are based on PEFT.
 
 ## Citation
