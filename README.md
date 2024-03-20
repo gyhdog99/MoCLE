@@ -12,7 +12,7 @@ This repository contains the implementation of the paper:
 ## Installation
 
 
-1. Install [Lavis](https://github.com/salesforce/LAVIS), the codebase on which MoCLE is built. Follow the guidelines [here](https://github.com/salesforce/LAVIS?tab=readme-ov-file#installation).
+1. Install [LAVIS](https://github.com/salesforce/LAVIS), the codebase on which MoCLE is built. Follow the official guidelines [here](https://github.com/salesforce/LAVIS?tab=readme-ov-file#installation).
 
 2. Clone the repository of MoCLE.
 
@@ -20,15 +20,15 @@ This repository contains the implementation of the paper:
    git clone https://github.com/gyhdog99/mocle.git
    ```
 
-3. Build the modified [PEFT](https://github.com/huggingface/peft) package.
+3. Build our modified [PEFT](https://github.com/huggingface/peft) package.
     ```Shell
-    conda activate lavis  # the env created for Lavis in step 1
+    conda activate lavis  # the env created for LAVIS in step 1
     cd mocle
     cd peft-main
     pip install -e .
     ```
 
-4. Copy ```mocle.py``` and ```mocle.yaml``` in this repository to the following paths in Lavis:
+4. Copy ```mocle.py``` and ```mocle.yaml``` in this repository into the LAVIS directory following the architecture below:
 
     ```
     └── lavis
@@ -38,25 +38,22 @@ This repository contains the implementation of the paper:
             └── mocle.yaml
     ```
 
-5. Modify ```./lavis/models/__init__.py``` in Lavis as follows:
-
-
-    (a) add  ```from lavis.models.blip2_models.mocle import MoCLE``` in the begining of the file.
-    
-    (b) add ```"MoCLE"``` to ```__all__ = [...,...]```
+5. Modify ```./lavis/models/__init__.py``` in LAVIS as follows:
+   - Add  ```from lavis.models.blip2_models.mocle import MoCLE``` in the beginning of the file.
+   - Add ```"MoCLE"``` to ```__all__ = [...,...]```.
 
 ## Prepare Models
-1. MoCLE is based on vicuna-7b-v1.1. Download the corresponding model llm [here](https://huggingface.co/lmsys/vicuna-7b-v1.1).
-2. Set ```llm_model``` in ```.../lavis/configs/mocle.yaml``` to the downloaded LLM weight path.
-3. Download the model checkpoint of MoCLE
+1. MoCLE is based on Vicuna-7B-v1.1. Download the corresponding LLM checkpoint [here](https://huggingface.co/lmsys/vicuna-7b-v1.1).
+2. Set the ```llm_model``` argument in ```.../lavis/configs/mocle.yaml``` to the local path towards the downloaded Vicuna checkpoint.
+3. Download the pre-trained checkpoint of MoCLE (TBD).
 
-    | # Clusters | Temperatures | Main Model | Clustering Model |
-    |--|----|-----|-----|
+    | # Clusters | Temperature | Main Model | Clustering Model |
+    |:--:|:----:|:-----:|:-----:|
     | 16 | 0.05 | [c16_t005]() | [c16]() |
     | 64 | 0.05 | [c64_t005]() | [c64]() |
     | 64 | 0.10 | [c64_t010]() | [c64]() |
 4. Set ```finetuned``` and ```kmeans_ckpt``` in ```.../lavis/configs/mocle.yaml``` to the weights of the downloaded main model and clustering model, respectively. 
-(Please adjust ```total_tasks``` and ```gates_tmp``` accordingly, which stand for # Clusters and Temperatures). 
+(Please adjust the ```total_tasks``` and ```gates_tmp``` parameters as ```# Clusters``` and ```Temperature``` accordingly). 
 
 ## Model Inference 
 
@@ -84,12 +81,16 @@ This repository contains the implementation of the paper:
 3. Generate
 
     ```python
-    model.generate({"image": image, "prompt": "Your query about this image"})
+    response = model.generate({"image": image, "prompt": "Your query about this image"})
+    print(response)
     ```
 
+## Model Training
+Coming soon.
+
 ## Acknowledgement
-+ [Lavis](https://github.com/salesforce/LAVIS) This repository is built upon Lavis!
-+ [PEFT](https://github.com/huggingface/peft) Our Mixture of LoRAs are based on PEFT.
++ [LAVIS](https://github.com/salesforce/LAVIS): Implementations of our MoCLE are built upon LAVIS.
++ [PEFT](https://github.com/huggingface/peft): Implementations of our Mixture of LoRA experts are based on PEFT.
 
 ## Citation
 
