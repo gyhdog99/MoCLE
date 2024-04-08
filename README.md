@@ -49,9 +49,9 @@ This repository contains the implementation of the paper:
 
     | # Clusters | Temperature | Main Model | Clustering Model |
     |:--:|:----:|:-----:|:-----:|
-    | 16 | 0.05 | [c16_t005]() | [c16]() |
-    | 64 | 0.05 | [c64_t005]() | [c64]() |
-    | 64 | 0.10 | [c64_t010]() | [c64]() |
+    | 16 | 0.05 | [c16_t005](https://huggingface.co/KaiChen1998/mocle-c16-t005) | [c16](https://huggingface.co/KaiChen1998/mocle-cluster16) |
+    | 64 | 0.05 | [c64_t005](https://huggingface.co/KaiChen1998/mocle-c64-t005) | [c64](https://huggingface.co/KaiChen1998/mocle-cluster64) |
+    | 64 | 0.10 | [c64_t010](https://huggingface.co/KaiChen1998/mocle-c64-t01) | [c64](https://huggingface.co/KaiChen1998/mocle-cluster64) |
 4. Set ```finetuned``` and ```kmeans_ckpt``` in ```.../lavis/configs/mocle.yaml``` to the weights of the downloaded main model and clustering model, respectively. 
 (Please adjust the ```total_tasks``` and ```gates_tmp``` parameters as ```# Clusters``` and ```Temperature``` accordingly). 
 
