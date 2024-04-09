@@ -12,7 +12,7 @@ This repository contains the implementation of the paper:
 ## Installation
 
 
-1. Install [LAVIS](https://github.com/salesforce/LAVIS) to the current directory, the codebase on which MoCLE is built.
+1. Install [LAVIS](https://github.com/salesforce/LAVIS) to the current directory, the primary codebase on which MoCLE is built.
 
     ```shell
     conda create -n lavis python=3.8
@@ -50,7 +50,7 @@ This repository contains the implementation of the paper:
 ## Prepare Models
 1. MoCLE is based on Vicuna-7B-v1.1. Download the corresponding LLM checkpoint [here](https://huggingface.co/lmsys/vicuna-7b-v1.1).
 2. Set the ```llm_model``` argument in ```../lavis/configs/mocle.yaml``` to the local path towards the downloaded Vicuna checkpoint.
-3. Download the pre-trained checkpoint of MoCLE (TBD).
+3. Download the pre-trained checkpoint of MoCLE.
 
     | # Clusters | Temperature | Main Model | Clustering Model |
     |:--:|:----:|:-----:|:-----:|
