@@ -47,6 +47,7 @@ setup(
         "tqdm",
         "accelerate>=0.21.0",
         "safetensors",
+        "sentence_transformers==2.2.2"
     ],
     extras_require=extras,
     classifiers=[

@@ -12,39 +12,44 @@ This repository contains the implementation of the paper:
 ## Installation
 
 
-1. Install [LAVIS](https://github.com/salesforce/LAVIS), the codebase on which MoCLE is built. Follow the official guidelines [here](https://github.com/salesforce/LAVIS?tab=readme-ov-file#installation).
+1. Install [LAVIS](https://github.com/salesforce/LAVIS) to the current directory, the codebase on which MoCLE is built.
+
+    ```shell
+    conda create -n lavis python=3.8
+    conda activate lavis
+    git clone https://github.com/salesforce/LAVIS.git
+    cd LAVIS
+    pip install -e .
+    ```
 
 2. Clone the repository of MoCLE.
 
-   ```bash
+   ```shell
    git clone https://github.com/gyhdog99/mocle.git
    ```
 
 3. Build our modified [PEFT](https://github.com/huggingface/peft) package.
     ```Shell
-    conda activate lavis  # the env created for LAVIS in step 1
     cd mocle
     cd peft-main
     pip install -e .
     ```
-
+    
 4. Copy ```mocle.py``` and ```mocle.yaml``` in this repository into the LAVIS directory following the architecture below:
 
+    ```shell
+    cd ../
+    cp mocle.py ../lavis/models/blip2_models
+    cp mocle.yaml ../lavis/configs/models/blip2
     ```
-    └── lavis
-        ├── models
-        │    └── mocle.py
-        └── configs   
-            └── mocle.yaml
-    ```
-
-5. Modify ```./lavis/models/__init__.py``` in LAVIS as follows:
+    
+5. Modify ```../lavis/models/__init__.py``` in LAVIS as follows:
    - Add  ```from lavis.models.blip2_models.mocle import MoCLE``` in the beginning of the file.
    - Add ```"MoCLE"``` to ```__all__ = [...,...]```.
 
 ## Prepare Models
 1. MoCLE is based on Vicuna-7B-v1.1. Download the corresponding LLM checkpoint [here](https://huggingface.co/lmsys/vicuna-7b-v1.1).
-2. Set the ```llm_model``` argument in ```.../lavis/configs/mocle.yaml``` to the local path towards the downloaded Vicuna checkpoint.
+2. Set the ```llm_model``` argument in ```../lavis/configs/mocle.yaml``` to the local path towards the downloaded Vicuna checkpoint.
 3. Download the pre-trained checkpoint of MoCLE (TBD).
 
     | # Clusters | Temperature | Main Model | Clustering Model |
@@ -52,7 +57,7 @@ This repository contains the implementation of the paper:
     | 16 | 0.05 | [c16_t005](https://huggingface.co/KaiChen1998/mocle-c16-t005) | [c16](https://huggingface.co/KaiChen1998/mocle-cluster16) |
     | 64 | 0.05 | [c64_t005](https://huggingface.co/KaiChen1998/mocle-c64-t005) | [c64](https://huggingface.co/KaiChen1998/mocle-cluster64) |
     | 64 | 0.10 | [c64_t010](https://huggingface.co/KaiChen1998/mocle-c64-t01) | [c64](https://huggingface.co/KaiChen1998/mocle-cluster64) |
-4. Set ```finetuned``` and ```kmeans_ckpt``` in ```.../lavis/configs/mocle.yaml``` to the weights of the downloaded main model and clustering model, respectively. 
+4. Set ```finetuned``` and ```kmeans_ckpt``` in ```../lavis/configs/mocle.yaml``` to the weights of the downloaded main model and clustering model, respectively. 
 (Please adjust the ```total_tasks``` and ```gates_tmp``` parameters as ```# Clusters``` and ```Temperature``` accordingly). 
 
 ## Model Inference 
@@ -81,7 +86,7 @@ This repository contains the implementation of the paper:
 3. Generate
 
     ```python
-    response = model.generate({"image": image, "prompt": "Your query about this image"})
+    response = model.generate({"image": image, "prompt": ["Your query about this image"]})
     print(response)
     ```
 
